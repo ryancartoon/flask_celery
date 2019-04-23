@@ -1,9 +1,11 @@
 from flask import Flask
 from config import config
 
+APP_NAME = 'FLASK_CELERY'
+
 
 def create_app(config_name):
-    app = Flask(__name__)
+    app = Flask(APP_NAME)
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
 
