@@ -1,0 +1,39 @@
+version: "3"
+
+services:
+  redis:
+    image: redis:4.0.14
+    restart: always
+    expose:
+      - "6379"
+
+  celery_worker:
+    image: app:latest
+    restart: always
+    depends_on:
+      - redis
+    environment:
+      redis_host: redis
+      redis_port: 6379
+    command: ["worker"]
+
+  celery_beats:
+    image: app:latest
+    restart: always
+    depends_on:
+      - redis
+      - celery_worker
+    environment:
+      redis_host: redis
+      redis_port: 6379
+    command: ["beat"]
+
+  web:
+    image: app:latest
+    restart: always
+    depends_on:
+      - redis
+      - celery_worker
+    ports:
+      - "5000:8000"
+    command: ["web"]
