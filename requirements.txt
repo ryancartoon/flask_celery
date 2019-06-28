@@ -1,0 +1,5 @@
+flask
+celery
+gunicorn
+redis
+msgpack-python
