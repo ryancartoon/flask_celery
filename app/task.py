@@ -10,7 +10,6 @@ celery_app = make_celery(app)
 
 
 @celery_app.task()
-def show_app_name():
+def start_task():
     name = current_app.name
-    print("current app name is %s" % name)
     return name
