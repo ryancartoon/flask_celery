@@ -21,4 +21,6 @@ docker-compose -f docker/docker-compose.yaml rm
 ```
 
 ## TODO
-- add sqlalchemy
+- sqlalchemy
+- pytest
+- coverage
