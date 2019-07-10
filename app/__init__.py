@@ -24,8 +24,10 @@ def create_app_celery(config_name):
 
 def _create_app(config_name):
     app = Flask(APP_NAME)
-    app.config.from_object(config[config_name])
+    app_config = config[config_name]
+    app.config.from_object(app_config)
 
     db.init_app(app)
+    app_config.init_app(app)
 
     return app
