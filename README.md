@@ -1,7 +1,9 @@
-
+# Flask Celery intergartion
 
 
 ## DB初始化
+
+在初始化前，需要先删除掉db文件和migrations文件夹。
 
     flask db init
     flask db migrate
