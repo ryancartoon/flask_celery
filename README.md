@@ -1,4 +1,4 @@
-# Flask Celery intergartion
+# Flask Celery集成
 
 
 ## DB初始化
