@@ -2,7 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from config import config
 
-APP_NAME = 'FLASK_CELERY_DEMO'
+app_name = 'FLASK_CELERY_DEMO'
 
 db = SQLAlchemy()
 
@@ -23,7 +23,7 @@ def create_app_celery(config_name):
 
 
 def _create_app(config_name):
-    app = Flask(APP_NAME)
+    app = Flask(app_name)
     app_config = config[config_name]
     app.config.from_object(app_config)
 
