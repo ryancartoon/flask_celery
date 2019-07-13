@@ -6,3 +6,6 @@ gunicorn
 redis
 msgpack-python
 pytest
+black
+flake8
+tox
