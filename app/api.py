@@ -25,7 +25,7 @@ def tasks():
     })
 
 
-@api.route('/task/start')
+@api.route('/task/start', methods=['POST'])
 def start():
     task = Task()
     task.uuid = str(uuid4())
