@@ -2,10 +2,21 @@ from flask import Blueprint, jsonify, current_app
 from uuid import uuid4
 
 from .task import start_task
-from .models import Task
+from . import models
 from . import db
 
 api = Blueprint('api', __name__)
+
+
+def add_task():
+    task = models.Task()
+    task.uuid = str(uuid4())
+    task.status = 'running'
+
+    db.session.add(task)
+    db.session.commit()
+
+    return task.uuid
 
 
 @api.route('/home')
@@ -15,10 +26,10 @@ def index():
 
 @api.route('/tasks')
 def tasks():
-    tasks = db.session.query(Task).all()
+    tasks = db.session.query(models.Task).all()
 
     return jsonify({
-        "task_uuids": [{
+        "tasks": [{
             "uuid": task.uuid,
             "status": task.status
         } for task in tasks]
@@ -27,16 +38,11 @@ def tasks():
 
 @api.route('/task/start', methods=['POST'])
 def start():
-    task = Task()
-    task.uuid = str(uuid4())
-    task.status = 'running'
 
-    db.session.add(task)
-    db.session.commit()
+    task_uuid = add_task()
+    start_task.apply_async(None, None, task_uuid)
 
-    start_task.apply_async(None, None, task.uuid)
-
-    return jsonify({"task_id": task.uuid})
+    return jsonify({"task_id": task_uuid})
 
 
 @api.route('/task/<task_uuid>/status')

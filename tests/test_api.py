@@ -3,6 +3,7 @@ import json
 from unittest.mock import patch
 
 from app import models
+from app.api import add_task
 
 
 def test_index(test_app):
@@ -23,3 +24,13 @@ def test_task(test_app):
         exp_task_uuid = models.Task.query.all()[0].uuid
 
         assert task_uuid == exp_task_uuid
+
+
+def test_tasks(test_app):
+    expect_tasks = [add_task(), add_task()]
+
+    client = test_app.test_client()
+    resp = client.get("/api/tasks")
+
+    assert [t["uuid"] for t in json.loads(resp.data)["tasks"]].sort() \
+        == expect_tasks.sort()
