@@ -1,7 +1,22 @@
 # Flask Celery集成
 
 
-## DB初始化
+## 安装项目依赖
+
+    python -m venv venv; source venv/bin/activate
+    pip install -r requirements.txt
+    pip install --upgrade https://github.com/jakubroztocil/httpie/archive/master.tar.gz
+
+
+## 启动开发环境服务
+
+### export flask env
+
+    export FLASK_APP=manage.py
+    export FLASK_ENV=development 
+
+
+### DB初始化
 
 在初始化前，需要先删除掉db文件和migrations文件夹。
 
@@ -9,13 +24,11 @@
     flask db migrate
     flask db upgrade
 
-## 启动开发环境服务
 
 ### 启动web server
 
-    export FLASK_APP=manage.py
-    export FLASK_ENV=development 
     flask run
+
 
 ### 启动redis-server
 
@@ -28,16 +41,16 @@
 
 ### 访问Web API
 
-    http://127.0.0.1:5000/api/home
+    http http://127.0.0.1:5000/api/home
 
 
 #### 发起新任务
 
-    http://127.0.0.1:5000/api/task/start
+    http post http://127.0.0.1:5000/api/task/start
 
 #### 查看所有的任务
 
-    http://127.0.0.1:5000/api/tasks
+    http http://127.0.0.1:5000/api/tasks
 
 
 ## docker deploy
