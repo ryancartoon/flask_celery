@@ -1,6 +1,8 @@
 flask
 flask_migrate
 flask_sqlalchemy
+flask_restplus
+marshmallow
 celery
 gunicorn
 redis

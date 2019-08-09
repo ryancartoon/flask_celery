@@ -1,12 +1,14 @@
-from flask import Blueprint, jsonify, current_app
+from flask import jsonify, current_app
+from flask_restplus import Api, Resource
 from uuid import uuid4
+from marshmallow import Schema, fields
 
 from .task import start_task
-from . import models
-from . import db
+from . import models, db
 
-api = Blueprint('api', __name__)
-
+api = Api(version='1.0', title='Task API',
+    description='A simple Task API',
+)
 
 def add_task():
     task = models.Task()
@@ -16,41 +18,39 @@ def add_task():
     db.session.add(task)
     db.session.commit()
 
-    return task.uuid
+    return task
 
 
-@api.route('/home')
-def index():
-    return jsonify({"index": "home"})
+class TaskSchema(Schema):
+    uuid = fields.Str()
+    status = fields.Str()
 
 
 @api.route('/tasks')
-def tasks():
-    tasks = db.session.query(models.Task).all()
+class TaskList(Resource):
 
-    return jsonify({
-        "tasks": [{
-            "uuid": task.uuid,
-            "status": task.status
-        } for task in tasks]
-    })
+    @api.doc('get all tasks')
+    def get(self):
+        schema = TaskSchema()
+        tasks = db.session.query(models.Task).all()
 
+        return schema.dump(tasks, many=True)
 
-@api.route('/task/start', methods=['POST'])
-def start():
+    @api.doc('start a task')
+    def post(self):
+        task = add_task()
+        start_task.apply_async(None, None, task.uuid)
 
-    task_uuid = add_task()
-    start_task.apply_async(None, None, task_uuid)
-
-    return jsonify({"task_id": task_uuid})
+        schema = TaskSchema()
+        return schema.dump(task)
 
 
-@api.route('/task/<task_uuid>/status')
-def task_status(task_uuid):
-    task = {}
-    task_db = current_app.db.session.query(uuid=task_uuid).first_or_404()
+@api.route('/tasks/<task_id>')
+class Task(Resource):
 
-    task['uuid'] = task_uuid
-    task['status'] = task_db.status
+    @api.doc('get a task')
+    def get(self, task_id):
+        schema = TaskSchema()
+        task = db.session.query(models.Task).filter_by(uuid=task_id).one()
 
-    return jsonify(task)
+        return schema.dump(task)
