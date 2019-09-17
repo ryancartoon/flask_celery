@@ -7,6 +7,7 @@ app_name = 'FLASK_CELERY_DEMO'
 
 db = SQLAlchemy()
 
+
 def create_app(config_name):
     app = _create_app(config_name)
 

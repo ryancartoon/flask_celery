@@ -1,4 +1,3 @@
-from flask import jsonify, current_app
 from flask_restplus import Api, Resource
 from uuid import uuid4
 from marshmallow import Schema, fields
@@ -6,9 +5,14 @@ from marshmallow import Schema, fields
 from .task import start_task
 from . import models, db
 
-api = Api(version='1.0', title='Task API',
-    description='A simple Task API',
+api = Api(
+    version='1.0',
+    title='API',
+    description='api',
 )
+
+ns = api.namespace('api', description='task api namespace')
+
 
 def add_task():
     task = models.Task()
@@ -26,9 +30,8 @@ class TaskSchema(Schema):
     status = fields.Str()
 
 
-@api.route('/tasks')
+@ns.route('/tasks')
 class TaskList(Resource):
-
     @api.doc('get all tasks')
     def get(self):
         schema = TaskSchema()
@@ -45,9 +48,8 @@ class TaskList(Resource):
         return schema.dump(task)
 
 
-@api.route('/tasks/<task_id>')
+@ns.route('/tasks/<task_id>')
 class Task(Resource):
-
     @api.doc('get a task')
     def get(self, task_id):
         schema = TaskSchema()

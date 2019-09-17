@@ -39,14 +39,9 @@
     celery worker -A app.task.celery_app
 
 
-### 访问Web API
-
-    http http://127.0.0.1:5000/api/home
-
-
 #### 发起新任务
 
-    http post http://127.0.0.1:5000/api/task/start
+    http post http://127.0.0.1:5000/api/tasks
 
 #### 查看所有的任务
 
