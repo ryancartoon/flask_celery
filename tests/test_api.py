@@ -7,7 +7,7 @@ from app.api import add_task
 
 
 def test_tasks(test_app):
-    expect_tasks = [add_task(), add_task()]
+    expect_tasks = [add_task("type1"), add_task("type2")]
 
     client = test_app.test_client()
     resp = client.get("/api/tasks")
@@ -17,7 +17,7 @@ def test_tasks(test_app):
 
 
 def test_task(test_app):
-    task = add_task()
+    task = add_task("type1")
 
     client = test_app.test_client()
     resp = client.get("/api/tasks/" + task.uuid)
